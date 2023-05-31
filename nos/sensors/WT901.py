@@ -119,10 +119,10 @@ class WT901(NosI2CDevice):
         rx,ry,rz=self.__xyz(data[18:24],180/32768)
         
         d = {
-            'acceleration'      : {'x':ax,'y':ay,'z':az},
-            'angular_velocity'  : {'x':wx,'y':wy,'z':wz},
-            'magnetic'          : {'x':mx,'y':my,'z':mz},
-            'angle'             : {'x':rx,'y':ry,'z':rz}
+            'acceleration'      : {'x':ax,'y':ay,'z':az},   # g or 9.8m/s^2
+            'angular_velocity'  : {'x':wx,'y':wy,'z':wz},   # °/s
+            'magnetic'          : {'x':mx,'y':my,'z':mz},   # G or µT
+            'angle'             : {'x':rx,'y':ry,'z':rz}    # °
         }
         return d
     
@@ -132,23 +132,28 @@ if __name__ == "__main__":
     i2c=NosI2C(scl=5,sda=4)
     i2c.scan()
     wt = WT901(0x50,i2c=i2c)
-    # print(wt.get_angles())
-    rg=[0,0,0]
-    dt=0.1
     while True:
         time.sleep(0.1)
-        d=wt.get_data()
+        data=wt.get_data()
+        print(data['angle'])
+    
+    # print(wt.get_angles())
+    # rg=[0,0,0]
+    # dt=0.1
+    # while True:
+    #     time.sleep(0.1)
+    #     d=wt.get_data()
         
-        rx = degrees(atan2(d['acceleration']['y'],sqrt(d['acceleration']['x']**2+d['acceleration']['z']**2)))
-        ry = degrees(atan2(d['acceleration']['x'],sqrt(d['acceleration']['y']**2+d['acceleration']['z']**2)))
-        rg[0]+=d['angular_velocity']['x']*dt
-        rg[1]+=d['angular_velocity']['y']*dt
-        rg[2]+=d['angular_velocity']['z']*dt
+    #     rx = degrees(atan2(d['acceleration']['y'],sqrt(d['acceleration']['x']**2+d['acceleration']['z']**2)))
+    #     ry = degrees(atan2(d['acceleration']['x'],sqrt(d['acceleration']['y']**2+d['acceleration']['z']**2)))
+    #     rg[0]+=d['angular_velocity']['x']*dt
+    #     rg[1]+=d['angular_velocity']['y']*dt
+    #     rg[2]+=d['angular_velocity']['z']*dt
         
-        c=0.80
-        rg[0]=c * (rg[0] - 0) + (1-c) * rx
-        rg[1]=c * (rg[1] - 0) + (1-c) * ry
-        print("given: %s"%d['angle'])
-        print("check: %s"%{'x':rg[0],'y':rg[1],'z':rg[2]})
+    #     c=0.80
+    #     rg[0]=c * (rg[0] - 0) + (1-c) * rx
+    #     rg[1]=c * (rg[1] - 0) + (1-c) * ry
+    #     print("given: %s"%d['angle'])
+    #     # print("check: %s"%{'x':rg[0],'y':rg[1],'z':rg[2]})
         
     

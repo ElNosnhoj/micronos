@@ -29,3 +29,13 @@ def between(val,low,high):
     """
     if val>=low and val<=high: return True
     else: return False
+    
+def maprange(x,a,b,c,d):
+    """ maps x in range a->b to range c->d
+    * x (`number`): input value to be converted
+    * a (`number`): minimum input range
+    * b (`number`): maximum input range
+    * c (`number`): minimum output range
+    * d (`number`): maximum output range
+    """
+    return (x-a)/(b-a)*(d-c)+c

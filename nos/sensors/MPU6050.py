@@ -151,9 +151,9 @@ if __name__ == "__main__":
     i2c=NosI2C(scl=5,sda=4)
     mpu=MPU6050(0x68,i2c=i2c)
     while True:
+        time.sleep(0.1)
         d=mpu.get_data()
         print(d['angle'])
-        time.sleep(0.1)
 
         
         
